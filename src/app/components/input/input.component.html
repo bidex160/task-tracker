@@ -1,0 +1,73 @@
+<ng-container [ngSwitch]="type" [formGroup]="form">
+  <!-- SELECT -->
+  <ng-container *ngSwitchCase="'select'">
+    <label *ngIf="label">{{ label }} </label>
+    <div class="input dropdown">
+      <mat-select
+        class="myPanelClass"
+        [disableOptionCentering]="true"
+        [placeholder]="placeholder || 'Select'"
+        [formControlName]="name"
+        (selectionChange)="onSelect($event)"
+      >
+        <mat-option *ngFor="let option of __option" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </ng-container>
+  <!-- TEXTAREA -->
+  <ng-container *ngSwitchCase="'textarea'">
+    <label *ngIf="label">{{ label }} </label>
+    <div id="input" [class]="'input textarea'">
+      <textarea
+        [formControlName]="name"
+        [required]="required"
+        [placeholder]="placeholder"
+        rows="4"
+        cols="50"
+        (change)="inputChange($event)"
+        (focus)="onFocus()"
+        (focusout)="onFocusOut()"
+      ></textarea>
+    </div>
+  </ng-container>
+
+  <!-- PASSWORD -->
+  <ng-container *ngSwitchCase="'password'">
+    <label *ngIf="label">{{ label }} </label>
+    <div [class]="'input'" id="input">
+      <input
+        type="{{ showPassword ? 'text' : 'password' }}"
+        [formControlName]="name"
+        placeholder="{{ placeholder }}"
+        [required]="required"
+        (change)="inputChange($event)"
+        (focus)="onFocus()"
+        (focusout)="onFocusOut()"
+      />
+      <div class="password-icon" (click)="showPassword = !showPassword">
+        <img *ngIf="!showPassword" src="{{ 'assets/icons/eye-gray.svg' }}" />
+        <img
+          *ngIf="showPassword"
+          src="{{ 'assets/icons/eye-closed-gray.svg' }}"
+        />
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- DEFAULT -->
+  <ng-container *ngSwitchDefault>
+    <label *ngIf="label">{{ label }} </label>
+    <div id="input" [class]="'input'">
+      <input
+        [type]="type"
+        [placeholder]="placeholder"
+        [formControlName]="name"
+        (change)="inputChange($event)"
+        (focus)="onFocus()"
+        (focusout)="onFocusOut()"
+      />
+    </div>
+  </ng-container>
+</ng-container>

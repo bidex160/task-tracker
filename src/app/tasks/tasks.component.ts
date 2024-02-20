@@ -16,6 +16,7 @@ import { CreateTaskModalComponent } from '../components/create-task-modal/create
 import { ComponentsModule } from '../components/components.module';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-tasks',
@@ -36,48 +37,47 @@ export class TasksComponent {
     sort: new FormControl(null),
   });
   sortOptions = ['All', 'Me'];
-  tasks: Task[] = [
-    {
-      id: 1,
-      description: 'desc',
-      dueDate: new Date().toISOString(),
-      title: 'Task 1',
-      status: 'Open',
-      assignedTo: 'me',
-    },
-    {
-      id: 2,
-      description: 'desc',
-      dueDate: new Date().toISOString(),
-      title: 'Task 2',
-      status: 'Open',
-    },
-  ];
-  originalTasks: Task[] = [];
+  tasks: Task[] = [];
+  filteredTasks: Task[] = [];
   openTasks: Task[] = [];
   pendingTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
 
-  constructor(public dialog: MatDialog, private auth: AuthService) {
-    this.originalTasks = this.tasks;
-    this.arrangeTasks();
+  constructor(
+    public dialog: MatDialog,
+    private auth: AuthService,
+    private tasksServ: TaskService
+  ) {
+    this.fetchTasks();
+  }
+
+  fetchTasks() {
+    this.tasksServ.fetchTasks().subscribe({
+      next: (r: any) => {
+        this.tasks = this.filteredTasks = r?.tasks || [];
+        this.arrangeTasks();
+      },
+      error: (er) => {
+        this.tasks = this.filteredTasks = [];
+      },
+    });
   }
 
   arrangeTasks() {
-    this.openTasks = this.tasks.filter(
+    this.openTasks = this.filteredTasks.filter(
       (task) => task?.status?.toLowerCase() == 'open'
     );
 
-    this.pendingTasks = this.tasks.filter(
+    this.pendingTasks = this.filteredTasks.filter(
       (task) => task?.status?.toLowerCase() == 'pending'
     );
 
-    this.inProgressTasks = this.tasks.filter(
+    this.inProgressTasks = this.filteredTasks.filter(
       (task) => task?.status?.toLowerCase() == 'progress'
     );
 
-    this.completedTasks = this.tasks.filter(
+    this.completedTasks = this.filteredTasks.filter(
       (task) => task?.status?.toLowerCase() == 'completed'
     );
   }
@@ -111,6 +111,8 @@ export class TasksComponent {
       })
       .afterClosed()
       .subscribe((res: Task) => {
+        console.log(res);
+
         if (!res) return;
         if (!task) this.tasks.push(res);
         else {
@@ -149,12 +151,11 @@ export class TasksComponent {
 
   sortTasks(filter: string) {
     if (filter?.toLowerCase() == 'me')
-      this.tasks = this.originalTasks.filter(
+      this.filteredTasks = this.tasks.filter(
         (task) => task.assignedTo == this.currenntUser.email
       );
-    else if (filter?.toLowerCase() == 'all') this.tasks = this.originalTasks;
+    else if (filter?.toLowerCase() == 'all') this.filteredTasks = this.tasks;
 
     this.arrangeTasks();
-    console.log(filter);
   }
 }

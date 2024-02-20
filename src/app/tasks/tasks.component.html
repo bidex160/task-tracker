@@ -1,0 +1,67 @@
+<div class="mx-8 flex flex-col">
+  <div cdkDropListGroup class="grid grid-cols-4 gap-4">
+    <div class="tasks-container">
+      <div class="flex justify-between">
+        <h2>Open</h2>
+        <mat-icon (click)="openTaskModal()">add</mat-icon>
+      </div>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="tasks"
+        class="task-list mt-4"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of tasks; track item) {
+        <div cdkDrag class="example-box">{{ item.title }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="tasks-container">
+      <h2>Pending</h2>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="pendingTasks"
+        class="task-list mt-4"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of pendingTasks; track item) {
+        <div cdkDrag>{{ item.title }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="tasks-container">
+      <h2>In Progress</h2>
+
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="inProgressTasks"
+        class="task-list mt-4"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of inProgressTasks; track item) {
+        <div cdkDrag>{{ item.title }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="tasks-container">
+      <h2>Completed</h2>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="completedTasks"
+        class="task-list mt-4"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of completedTasks; track item) {
+        <div>{{ item.title }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

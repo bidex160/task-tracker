@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { CreateTaskModalComponent } from '../components/create-task-modal/create-task-modal.component';
 import { ComponentsModule } from '../components/components.module';
 import { FormControl, FormGroup } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tasks',
@@ -58,7 +59,7 @@ export class TasksComponent {
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private auth: AuthService) {
     this.originalTasks = this.tasks;
     this.arrangeTasks();
   }
@@ -142,9 +143,15 @@ export class TasksComponent {
     }
   }
 
+  get currenntUser() {
+    return this.auth.currentUserValue;
+  }
+
   sortTasks(filter: string) {
     if (filter?.toLowerCase() == 'me')
-      this.tasks = this.originalTasks.filter((task) => task.assignedTo == 'me');
+      this.tasks = this.originalTasks.filter(
+        (task) => task.assignedTo == this.currenntUser.email
+      );
     else if (filter?.toLowerCase() == 'all') this.tasks = this.originalTasks;
 
     this.arrangeTasks();

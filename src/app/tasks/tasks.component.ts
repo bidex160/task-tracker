@@ -12,7 +12,9 @@ import { Task } from '../model/task';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-// import { CreateTaskModalComponent } from '../components/create-task-modal/create-task-modal.component';
+import { CreateTaskModalComponent } from '../components/create-task-modal/create-task-modal.component';
+import { ComponentsModule } from '../components/components.module';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-tasks',
@@ -23,11 +25,16 @@ import { CommonModule } from '@angular/common';
     CdkDropList,
     CdkDrag,
     MatIconModule,
+    ComponentsModule,
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
 export class TasksComponent {
+  form: FormGroup = new FormGroup({
+    sort: new FormControl(null),
+  });
+  sortOptions = ['me']
   tasks: Task[] = [
     {
       id: 1,
@@ -35,6 +42,7 @@ export class TasksComponent {
       dueDate: new Date().toISOString(),
       title: 'Task 1',
       status: 'Open',
+      assignedTo: 'thabidemi@gmail.com',
     },
     {
       id: 2,
@@ -44,11 +52,32 @@ export class TasksComponent {
       status: 'Open',
     },
   ];
+  openTasks: Task[] = [];
   pendingTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog) {
+    this.arrangeTasks();
+  }
+
+  arrangeTasks() {
+    this.openTasks = this.tasks.filter(
+      (task) => task?.status?.toLowerCase() == 'open'
+    );
+
+    this.pendingTasks = this.tasks.filter(
+      (task) => task?.status?.toLowerCase() == 'pending'
+    );
+
+    this.inProgressTasks = this.tasks.filter(
+      (task) => task?.status?.toLowerCase() == 'progress'
+    );
+
+    this.completedTasks = this.tasks.filter(
+      (task) => task?.status?.toLowerCase() == 'completed'
+    );
+  }
 
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
@@ -58,8 +87,10 @@ export class TasksComponent {
         event.currentIndex
       );
     } else {
+      let previousData = event.previousContainer.data;
+      previousData[event.previousIndex].status = event.container.id;
       transferArrayItem(
-        event.previousContainer.data,
+        previousData,
         event.container.data,
         event.previousIndex,
         event.currentIndex
@@ -67,5 +98,45 @@ export class TasksComponent {
     }
   }
 
-  openTaskModal() {}
+  openTaskModal(task?: Task) {
+    this.dialog
+      .open(CreateTaskModalComponent, {
+        data: {
+          task: task,
+        },
+        width: '40%',
+      })
+      .afterClosed()
+      .subscribe((res: Task) => {
+        if (!task) this.tasks.push(res);
+        else {
+          let idx = this.tasks.findIndex((task) => task.id == res.id);
+          this.tasks[idx] = res;
+        }
+        this.arrangeTasks();
+      });
+  }
+
+  deleteTask(delTask: Task) {
+    let idx = this.tasks.findIndex((task) => task.id == delTask.id);
+    this.tasks.splice(idx, 1);
+    this.tasks = [...this.tasks];
+    this.arrangeTasks();
+  }
+
+  onDropdownAction(action: number, task?: Task | any) {
+    console.log(action);
+    switch (action) {
+      case 1: {
+        this.openTaskModal(task);
+        break;
+      }
+      case 2: {
+        this.deleteTask(task);
+        break;
+      }
+      default:
+        return;
+    }
+  }
 }

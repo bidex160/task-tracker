@@ -1,4 +1,12 @@
 <div class="mx-8 flex flex-col">
+  <div class="flex justify-end">
+    <app-input
+      type="select"
+      [form]="form"
+      name="sort"
+      [options]="sortOptions"
+    />
+  </div>
   <div cdkDropListGroup class="grid grid-cols-4 gap-4">
     <div class="tasks-container">
       <div class="flex justify-between">
@@ -8,12 +16,17 @@
 
       <div
         cdkDropList
-        [cdkDropListData]="tasks"
+        [cdkDropListData]="openTasks"
         class="task-list mt-4"
+        id="open"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of tasks; track item) {
-        <div cdkDrag class="example-box">{{ item.title }}</div>
+        @for (item of openTasks; track item) {
+        <app-task-card
+          (action)="onDropdownAction($event, item)"
+          cdkDrag
+          [task]="item"
+        />
         }
       </div>
     </div>
@@ -25,10 +38,15 @@
         cdkDropList
         [cdkDropListData]="pendingTasks"
         class="task-list mt-4"
+        id="pending"
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of pendingTasks; track item) {
-        <div cdkDrag>{{ item.title }}</div>
+        <app-task-card
+          (action)="onDropdownAction($event, item)"
+          cdkDrag
+          [task]="item"
+        />
         }
       </div>
     </div>
@@ -41,10 +59,15 @@
         #doneList="cdkDropList"
         [cdkDropListData]="inProgressTasks"
         class="task-list mt-4"
+        id="progress"
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of inProgressTasks; track item) {
-        <div cdkDrag>{{ item.title }}</div>
+        <app-task-card
+          (action)="onDropdownAction($event, item)"
+          cdkDrag
+          [task]="item"
+        />
         }
       </div>
     </div>
@@ -56,10 +79,15 @@
         cdkDropList
         [cdkDropListData]="completedTasks"
         class="task-list mt-4"
+        id="completed"
         (cdkDropListDropped)="drop($event)"
       >
         @for (item of completedTasks; track item) {
-        <div>{{ item.title }}</div>
+        <app-task-card
+          (action)="onDropdownAction($event, item)"
+          cdkDrag
+          [task]="item"
+        />
         }
       </div>
     </div>

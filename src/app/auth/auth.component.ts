@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ComponentsModule } from '../components/components.module';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ComponentsModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })
@@ -33,8 +29,8 @@ export class AuthComponent {
     this.form.reset();
   }
 
-  get loginValidator(){
-    return  this.form.value.email && this.form.value.password
+  get loginValidator() {
+    return this.form.value.email && this.form.value.password;
   }
 
   login() {

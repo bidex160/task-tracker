@@ -63,6 +63,12 @@ export class AuthService {
       );
   }
 
+  fetchUsers() {
+    return this.http.get(
+      'https://questionnaire.dargservices.com/php/users.php'
+    );
+  }
+
   logout() {
     // // remove user from local storage and set current user to null
     this.appStorage.removeItem('taskAuth');

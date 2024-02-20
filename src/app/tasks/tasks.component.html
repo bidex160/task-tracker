@@ -1,10 +1,13 @@
 <div class="mx-8 flex flex-col">
+  <h4 class="my-8 text-sm text-lg font-bold text-center">Task Board</h4>
   <div class="flex justify-end">
     <app-input
       type="select"
+      label="Sort Tasks"
       [form]="form"
       name="sort"
       [options]="sortOptions"
+      (mchange)="sortTasks($event)"
     />
   </div>
   <div cdkDropListGroup class="grid grid-cols-4 gap-4">

@@ -34,7 +34,7 @@ export class TasksComponent {
   form: FormGroup = new FormGroup({
     sort: new FormControl(null),
   });
-  sortOptions = ['me']
+  sortOptions = ['All', 'Me'];
   tasks: Task[] = [
     {
       id: 1,
@@ -42,7 +42,7 @@ export class TasksComponent {
       dueDate: new Date().toISOString(),
       title: 'Task 1',
       status: 'Open',
-      assignedTo: 'thabidemi@gmail.com',
+      assignedTo: 'me',
     },
     {
       id: 2,
@@ -52,12 +52,14 @@ export class TasksComponent {
       status: 'Open',
     },
   ];
+  originalTasks: Task[] = [];
   openTasks: Task[] = [];
   pendingTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   completedTasks: Task[] = [];
 
   constructor(public dialog: MatDialog) {
+    this.originalTasks = this.tasks;
     this.arrangeTasks();
   }
 
@@ -108,6 +110,7 @@ export class TasksComponent {
       })
       .afterClosed()
       .subscribe((res: Task) => {
+        if (!res) return;
         if (!task) this.tasks.push(res);
         else {
           let idx = this.tasks.findIndex((task) => task.id == res.id);
@@ -125,7 +128,6 @@ export class TasksComponent {
   }
 
   onDropdownAction(action: number, task?: Task | any) {
-    console.log(action);
     switch (action) {
       case 1: {
         this.openTaskModal(task);
@@ -138,5 +140,14 @@ export class TasksComponent {
       default:
         return;
     }
+  }
+
+  sortTasks(filter: string) {
+    if (filter?.toLowerCase() == 'me')
+      this.tasks = this.originalTasks.filter((task) => task.assignedTo == 'me');
+    else if (filter?.toLowerCase() == 'all') this.tasks = this.originalTasks;
+
+    this.arrangeTasks();
+    console.log(filter);
   }
 }

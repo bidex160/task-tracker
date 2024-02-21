@@ -10,6 +10,5 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'task-tracker';
   constructor(private auth: AuthService) {}
 }

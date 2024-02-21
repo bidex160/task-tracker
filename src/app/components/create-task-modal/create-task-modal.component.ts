@@ -40,6 +40,9 @@ export class CreateTaskModalComponent implements OnInit {
     if (this.task) this.form.patchValue(this.task);
   }
 
+  /**
+   * fetch users to populate assigned to input
+   */
   fetchUsers() {
     this.authServ.fetchUsers().subscribe({
       next: (res: any) => {
@@ -52,10 +55,18 @@ export class CreateTaskModalComponent implements OnInit {
     });
   }
 
+  /**
+   * close modal
+   * @param task  optional - edited / created task
+   */
   closeModal(task?: Task) {
     this.dialogRef.close(task);
   }
 
+  /**
+   * call updateTask / createTask function in task service
+   * 
+   */
   submitTask() {
     this.loading = true;
     let formData: FormData = new FormData();

@@ -8,7 +8,7 @@
         [disableOptionCentering]="true"
         [placeholder]="placeholder || 'Select'"
         [formControlName]="name"
-        (selectionChange)="onSelect($event)"
+        (selectionChange)="inputChange($event)"
       >
         <mat-option *ngFor="let option of __option" [value]="option.value">
           {{ option.label }}

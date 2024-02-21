@@ -46,8 +46,6 @@ export class TasksComponent {
     ['completed', []],
   ]);
 
-  isShow: boolean = true;
-
   constructor(
     public dialog: MatDialog,
     private auth: AuthService,
@@ -56,6 +54,9 @@ export class TasksComponent {
     this.fetchTasks();
   }
 
+  /**
+   * call fetchTasks from task service to fetch tasks
+   */
   fetchTasks() {
     this.tasksServ.fetchTasks().subscribe({
       next: (r: any) => {
@@ -68,6 +69,9 @@ export class TasksComponent {
     });
   }
 
+  /**
+   * arrange task base on status
+   */
   arrangeTasks() {
     this.tasksStatus.set(
       'open',
@@ -96,6 +100,10 @@ export class TasksComponent {
     );
   }
 
+  /**
+   * drag and drop event listener function to move task from one status to another
+   * @param event CdkDragDrop<Task[]> event from drag and drop
+   */
   drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
@@ -115,6 +123,10 @@ export class TasksComponent {
     }
   }
 
+  /**
+   * open task modal to create / edit task
+   * @param task optional - task to edit
+   */
   openTaskModal(task?: Task) {
     this.dialog
       .open(CreateTaskModalComponent, {
@@ -137,6 +149,10 @@ export class TasksComponent {
       });
   }
 
+  /**
+   * delete task from tasks & arrange according to status
+   * @param delTask task to delete from tasks
+   */
   deleteTask(delTask: Task) {
     let idx = this.tasks.findIndex((task) => task.id == delTask.id);
     this.tasks.splice(idx, 1);
@@ -144,6 +160,12 @@ export class TasksComponent {
     this.arrangeTasks();
   }
 
+  /**
+   * event listener function from task card dropdown
+   * @param action action to perform edit / delete
+   * @param task optional task selected
+   * @returns
+   */
   onDropdownAction(action: number, task?: Task | any) {
     switch (action) {
       case 1: {
@@ -159,10 +181,17 @@ export class TasksComponent {
     }
   }
 
+  /**
+   * get current logged in user form authentictaion servcie
+   */
   get currenntUser() {
     return this.auth.currentUserValue;
   }
 
+  /**
+   * filter tasks & arrange according to status
+   * @param filter filter paramter
+   */
   sortTasks(filter: string) {
     if (filter?.toLowerCase() == 'me')
       this.filteredTasks = this.tasks.filter(

@@ -1,6 +1,9 @@
+@defer (on viewport(viewport)) {
 <div class="mx-8 flex flex-col">
-  <h4 class="my-8 text-sm text-lg font-bold text-center">Task Board</h4>
-  <div class="flex justify-end">
+  <h4 class="my-8 text-sm text-lg font-bold text-center">
+    Task Board ({{ currenntUser.organization }})
+  </h4>
+  <div class="flex justify-end mb-5">
     <app-input
       type="select"
       label="Sort Tasks"
@@ -11,20 +14,23 @@
     />
   </div>
   <div cdkDropListGroup class="grid grid-cols-4 gap-4">
+    @for (taskStatus of tasksStatus.keys(); track $index) {
     <div class="tasks-container">
       <div class="flex justify-between">
-        <h2>Open</h2>
+        <h2 class="capitalize">{{ taskStatus }}</h2>
+        @if (taskStatus == 'open') {
         <mat-icon (click)="openTaskModal()">add</mat-icon>
+        }
       </div>
 
       <div
         cdkDropList
-        [cdkDropListData]="openTasks"
+        [cdkDropListData]="tasksStatus.get(taskStatus)"
         class="task-list mt-4"
-        id="open"
+        id="{{ taskStatus }}"
         (cdkDropListDropped)="drop($event)"
       >
-        @for (item of openTasks; track item) {
+        @for (item of tasksStatus.get(taskStatus); track item) {
         <app-task-card
           (action)="onDropdownAction($event, item)"
           cdkDrag
@@ -33,66 +39,9 @@
         }
       </div>
     </div>
-
-    <div class="tasks-container">
-      <h2>Pending</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="pendingTasks"
-        class="task-list mt-4"
-        id="pending"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (item of pendingTasks; track item) {
-        <app-task-card
-          (action)="onDropdownAction($event, item)"
-          cdkDrag
-          [task]="item"
-        />
-        }
-      </div>
-    </div>
-
-    <div class="tasks-container">
-      <h2>In Progress</h2>
-
-      <div
-        cdkDropList
-        #doneList="cdkDropList"
-        [cdkDropListData]="inProgressTasks"
-        class="task-list mt-4"
-        id="progress"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (item of inProgressTasks; track item) {
-        <app-task-card
-          (action)="onDropdownAction($event, item)"
-          cdkDrag
-          [task]="item"
-        />
-        }
-      </div>
-    </div>
-
-    <div class="tasks-container">
-      <h2>Completed</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="completedTasks"
-        class="task-list mt-4"
-        id="completed"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (item of completedTasks; track item) {
-        <app-task-card
-          (action)="onDropdownAction($event, item)"
-          cdkDrag
-          [task]="item"
-        />
-        }
-      </div>
-    </div>
+    }
   </div>
 </div>
+}
+
+<div #viewport></div>

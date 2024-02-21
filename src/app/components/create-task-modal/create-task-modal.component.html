@@ -10,21 +10,34 @@
   </div>
   <mat-dialog-content>
     <div></div>
-    <div class="grid mt-5 gap-4" [formGroup]="form">
+    <div class="grid mt-5 gap-4">
       <div class="form-group grid">
-        <label>Title</label>
-        <input formControlName="title" type="text" />
+        <app-input label="Title" name="title" [form]="form" />
       </div>
       <div class="form-group grid">
-        <label>Description</label>
-        <textarea formControlName="description"></textarea>
+        <app-input
+          label="Description"
+          name="description"
+          type="textarea"
+          [form]="form"
+        />
       </div>
       <div class="form-group grid">
-        <label>Due Date</label>
-        <input formControlName="dueDate" type="date" />
+        <app-input label="Due Date" name="dueDate" type="date" [form]="form" />
+      </div>
+      <div class="form-group grid">
+        <app-input
+          label="Assign To"
+          name="assignedTo"
+          [form]="form"
+          type="select"
+          [options]="users"
+          valueField="email"
+          labelField="username"
+        />
       </div>
       <button
-        [disabled]="!form.valid"
+        [disabled]="!form.valid || loading"
         (click)="submitTask()"
         class="d-flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded disabled:opacity-25"
       >

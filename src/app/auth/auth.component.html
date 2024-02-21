@@ -1,0 +1,69 @@
+@defer (on viewport(viewport)) {
+<div class="flex justify-center items-center h-screen w-full">
+  <div class="auth__card w-full md:w-96">
+    @if (isSignUp) {
+    <div class="grid gap-4">
+      <h4 class="text-center font-bold">Signup</h4>
+      <div class="form-group grid">
+        <app-input label="Username" name="userName" [form]="form" />
+      </div>
+
+      <div class="form-group grid">
+        <app-input label="FullName" name="fullName" [form]="form" />
+      </div>
+
+      <div class="form-group grid">
+        <app-input label="Email" name="email" [form]="form" />
+      </div>
+
+      <div class="form-group grid">
+        <app-input label="Organization" name="organization" [form]="form" />
+      </div>
+      <div class="form-group grid">
+        <app-input label="Password" name="password" [form]="form" />
+      </div>
+      <button
+        [disabled]="!form.valid || loading"
+        (click)="signUp()"
+        class="d-flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded disabled:opacity-25"
+      >
+        {{ "Submit" }}
+      </button>
+
+      <button (click)="toggleForm()" class="bg-white text-gray-800">
+        Login
+      </button>
+    </div>
+    } @else {
+    <div class="grid gap-4">
+      <h4 class="text-center font-bold">Login</h4>
+      <div class="form-group grid">
+        <app-input label="Email" name="email" [form]="form" />
+      </div>
+
+      <div class="form-group grid">
+        <app-input
+          label="Password"
+          name="password"
+          type="password"
+          [form]="form"
+        />
+      </div>
+      <button
+        [disabled]="!loginValidator || loading"
+        (click)="login()"
+        class="d-flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded disabled:opacity-25"
+      >
+        {{ "Submit" }}
+      </button>
+      <button (click)="toggleForm()" class="bg-white text-gray-800">
+        Create account
+      </button>
+    </div>
+    }
+  </div>
+</div>
+
+}
+
+<div #viewport></div>

@@ -35,6 +35,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * call endpoint to login user
+   * @param payload payload email  & passowrd
+   * @returns observable
+   */
   login(payload: any) {
     return this.http
       .post('https://questionnaire.dargservices.com/php/login.php', payload)
@@ -49,6 +54,11 @@ export class AuthService {
       );
   }
 
+  /**
+   * call endpoint to create new user
+   * @param payload payload user data
+   * @returns observable
+   */
   signup(payload: any) {
     return this.http
       .post('https://questionnaire.dargservices.com/php/register.php', payload)
@@ -63,12 +73,20 @@ export class AuthService {
       );
   }
 
+  /**
+   * call endpoint to fetch all users
+   * @returns promise
+   */
   fetchUsers() {
     return this.http.get(
       'https://questionnaire.dargservices.com/php/users.php'
     );
   }
 
+  /**
+   * logout user
+   * remove item from local storage and route to login
+   */
   logout() {
     // // remove user from local storage and set current user to null
     this.appStorage.removeItem('taskAuth');

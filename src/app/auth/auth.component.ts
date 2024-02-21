@@ -24,15 +24,26 @@ export class AuthComponent {
 
   constructor(private authSer: AuthService, private router: Router) {}
 
+  /**
+   * switch form between auth & signup
+   * reset formgroup
+   */
   toggleForm() {
     this.isSignUp = !this.isSignUp;
     this.form.reset();
   }
 
+  /**
+   * login form validator to enable / disable login button
+   */
   get loginValidator() {
     return this.form.value.email && this.form.value.password;
   }
 
+  /**
+   * on login button clicked
+   * call login function in AuthService & route to tasks board if successfully
+   */
   login() {
     this.authSer.login(this.form.value).subscribe({
       next: (res) => {
@@ -44,6 +55,10 @@ export class AuthComponent {
     });
   }
 
+  /**
+   * on login button clicked
+   * call signup function in AuthService & route to tasks board if successfully
+   */
   signUp() {
     this.authSer.signup(this.form.value).subscribe({
       next: (res) => {

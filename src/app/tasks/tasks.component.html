@@ -13,7 +13,7 @@
       (mchange)="sortTasks($event)"
     />
   </div>
-  <div cdkDropListGroup class="grid grid-cols-4 gap-4">
+  <div cdkDropListGroup class="grid md:grid-cols-4 gap-4">
     @for (taskStatus of tasksStatus.keys(); track $index) {
     <div class="tasks-container">
       <div class="flex justify-between">

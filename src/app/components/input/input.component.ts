@@ -27,7 +27,6 @@ export class InputComponent {
   @Input('options') set _option(v: any[]) {
     this.__option = this.formatOption(v);
   }
-  focused: boolean = false;
   showPassword: boolean = false;
   @Output() mchange: EventEmitter<any> = new EventEmitter();
 
@@ -35,6 +34,11 @@ export class InputComponent {
 
   ngOnInit() {}
 
+  /**
+   * format options for select input e.g map value and label from options
+   * @param options array of options
+   * @returns
+   */
   formatOption = (options: any[]) => {
     let format = options.map((r, i) => {
       let value;
@@ -56,22 +60,16 @@ export class InputComponent {
     return format;
   };
 
+  /**
+   * input change event listener
+   * emit value to the parent component
+   * @param event on change event
+   * @returns
+   */
   inputChange(event: any) {
     if (this.type == 'select') {
-      if (event.target.value) this.mchange.emit(event.target.value);
-      return;
-    }
-
-    this.mchange.emit(event.target.value);
-  }
-
-  onSelect(event: any) {
-    let value = event.value;
-    this.mchange.emit(value);
-    let patch: any = {};
-    patch[this.name] = value;
-    this.form.patchValue(value);
-    this.focused = !this.focused;
+      this.mchange.emit(event.value);
+    } else this.mchange.emit(event.target.value);
   }
 
   onFocus() {

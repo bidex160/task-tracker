@@ -46,6 +46,8 @@ export class TasksComponent {
     ['completed', []],
   ]);
 
+  isShow: boolean = true;
+
   constructor(
     public dialog: MatDialog,
     private auth: AuthService,

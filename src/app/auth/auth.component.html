@@ -1,3 +1,4 @@
+@defer (on viewport(viewport)) {
 <div class="flex justify-center items-center h-screen w-full">
   <div class="auth__card w-full md:w-96">
     @if (isSignUp) {
@@ -62,3 +63,7 @@
     }
   </div>
 </div>
+
+}
+
+<div #viewport></div>

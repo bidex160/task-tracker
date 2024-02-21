@@ -39,10 +39,12 @@ export class TasksComponent {
   sortOptions = ['All', 'Me'];
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
-  openTasks: Task[] = [];
-  pendingTasks: Task[] = [];
-  inProgressTasks: Task[] = [];
-  completedTasks: Task[] = [];
+  tasksStatus = new Map([
+    ['open', []],
+    ['pending', []],
+    ['progress', []],
+    ['completed', []],
+  ]);
 
   constructor(
     public dialog: MatDialog,
@@ -65,20 +67,30 @@ export class TasksComponent {
   }
 
   arrangeTasks() {
-    this.openTasks = this.filteredTasks.filter(
-      (task) => task?.status?.toLowerCase() == 'open'
+    this.tasksStatus.set(
+      'open',
+      this.filteredTasks.filter((task) => task?.status?.toLowerCase() == 'open')
     );
 
-    this.pendingTasks = this.filteredTasks.filter(
-      (task) => task?.status?.toLowerCase() == 'pending'
+    this.tasksStatus.set(
+      'pending',
+      this.filteredTasks.filter(
+        (task) => task?.status?.toLowerCase() == 'pending'
+      )
     );
 
-    this.inProgressTasks = this.filteredTasks.filter(
-      (task) => task?.status?.toLowerCase() == 'progress'
+    this.tasksStatus.set(
+      'progress',
+      this.filteredTasks.filter(
+        (task) => task?.status?.toLowerCase() == 'progress'
+      )
     );
 
-    this.completedTasks = this.filteredTasks.filter(
-      (task) => task?.status?.toLowerCase() == 'completed'
+    this.tasksStatus.set(
+      'completed',
+      this.filteredTasks.filter(
+        (task) => task?.status?.toLowerCase() == 'completed'
+      )
     );
   }
 
